@@ -27,6 +27,17 @@ on:
   workflow_dispatch:
 
 jobs:
+  license-check:
+    name: Check License Header
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check License Header
+        uses: apache/skywalking-eyes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
     name: Build
 
