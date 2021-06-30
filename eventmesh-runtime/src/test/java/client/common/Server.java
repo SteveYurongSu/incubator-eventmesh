@@ -17,12 +17,12 @@
 
 package client.common;
 
-import org.apache.eventmesh.runtime.boot.EventMeshServer;
-import org.apache.eventmesh.runtime.configuration.EventMeshHTTPConfiguration;
+import com.webank.eventmesh.runtime.boot.ProxyServer;
+import com.webank.eventmesh.runtime.configuration.ProxyConfiguration;
 
 public class Server {
 
-    EventMeshServer server;
+    ProxyServer server;
 
     static {
         System.setProperty("proxy.home", "E:\\projects\\external-1\\proxy");
@@ -32,9 +32,9 @@ public class Server {
     }
 
     public void startAccessServer() throws Exception {
-        EventMeshHTTPConfiguration eventMeshHttpConfiguration = new EventMeshHTTPConfiguration(null);
-        eventMeshHttpConfiguration.init();
-        server = new EventMeshServer(eventMeshHttpConfiguration, null);
+        ProxyConfiguration proxyConfiguration = new ProxyConfiguration(null);
+        proxyConfiguration.init();
+        server = new ProxyServer(proxyConfiguration, null);
         server.init();
         server.start();
     }

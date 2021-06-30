@@ -17,15 +17,18 @@
 
 package client.common;
 
-import java.util.concurrent.ThreadLocalRandom;
+import com.webank.eventmesh.runtime.constants.ProxyConstants;
+import com.webank.eventmesh.common.protocol.tcp.UserAgent;
+import org.apache.rocketmq.common.UtilAll;
+import org.apache.rocketmq.remoting.common.RemotingUtil;
 
-import org.apache.eventmesh.common.protocol.tcp.UserAgent;
-import org.apache.eventmesh.runtime.constants.EventMeshConstants;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class UserAgentUtils {
     public static UserAgent createPubUserAgent() {
         UserAgent userAgent = new UserAgent();
         userAgent.setSubsystem("5023");
+        userAgent.setDcn("AC0");
         userAgent.setPid(32893);
         userAgent.setVersion("2.0.11");
         userAgent.setIdc("FT");
@@ -34,7 +37,7 @@ public class UserAgentUtils {
         userAgent.setPort(8362);
         userAgent.setUsername("PU4283");
         userAgent.setPassword(generateRandomString(8));
-        userAgent.setPurpose(EventMeshConstants.PURPOSE_PUB);
+        userAgent.setPurpose(ProxyConstants.PURPOSE_PUB);
 
         return userAgent;
     }
@@ -42,8 +45,9 @@ public class UserAgentUtils {
     public static UserAgent createUserAgent() {
         UserAgent userAgent = new UserAgent();
         userAgent.setSubsystem("5123");
-//        userAgent.setPid(UtilAll.getPid());
-//        userAgent.setHost(RemotingUtil.getLocalAddress());
+        userAgent.setDcn("WAC");
+        userAgent.setPid(UtilAll.getPid());
+        userAgent.setHost(RemotingUtil.getLocalAddress());
         userAgent.setVersion("2.0.8");
         userAgent.setUsername("username");
         userAgent.setPassword("1234");
@@ -53,14 +57,15 @@ public class UserAgentUtils {
     public static UserAgent createSubUserAgent() {
         UserAgent userAgent = new UserAgent();
         userAgent.setSubsystem("5243");
-//        userAgent.setPid(UtilAll.getPid());
-//        userAgent.setHost(RemotingUtil.getLocalAddress());
+        userAgent.setDcn("WAC");
+        userAgent.setPid(UtilAll.getPid());
+        userAgent.setHost(RemotingUtil.getLocalAddress());
         userAgent.setPort(8888);
         userAgent.setVersion("2.0.8");
         userAgent.setUsername("username");
         userAgent.setPassword("1234");
         userAgent.setPath("/data/app/defibus-acl/");
-        userAgent.setPurpose(EventMeshConstants.PURPOSE_SUB);
+        userAgent.setPurpose(ProxyConstants.PURPOSE_SUB);
         return userAgent;
     }
 

@@ -17,24 +17,20 @@
 
 package demo;
 
-import io.netty.channel.ChannelHandlerContext;
-
-import org.apache.eventmesh.common.protocol.SubcriptionType;
-import org.apache.eventmesh.common.protocol.tcp.Command;
-import org.apache.eventmesh.common.protocol.tcp.Package;
-
 import client.common.ClientConstants;
 import client.common.MessageUtils;
 import client.hook.ReceiveMsgHook;
 import client.impl.SubClientImpl;
-import org.apache.eventmesh.common.protocol.SubscriptionMode;
+import com.webank.eventmesh.common.protocol.tcp.Command;
+import com.webank.eventmesh.common.protocol.tcp.Package;
+import io.netty.channel.ChannelHandlerContext;
 
 public class SyncSubClient {
     public static void main(String[] args) throws Exception {
         SubClientImpl client = new SubClientImpl("127.0.0.1", 10000, MessageUtils.generateSubServer());
         client.init();
         client.heartbeat();
-        client.justSubscribe(ClientConstants.SYNC_TOPIC, SubscriptionMode.CLUSTERING, SubcriptionType.SYNC);
+        client.justSubscribe(ClientConstants.SYNC_TOPIC);
         client.registerBusiHandler(new ReceiveMsgHook() {
             @Override
             public void handle(Package msg, ChannelHandlerContext ctx) {

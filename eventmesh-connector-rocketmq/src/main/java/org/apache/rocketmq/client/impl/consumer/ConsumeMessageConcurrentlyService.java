@@ -14,24 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.rocketmq.client.impl.consumer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.eventmesh.connector.rocketmq.patch.EventMeshConsumeConcurrentlyContext;
+import com.webank.eventmesh.connector.rocketmq.patch.ProxyConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -51,6 +36,9 @@ import org.apache.rocketmq.common.protocol.body.ConsumeMessageDirectlyResult;
 import org.apache.rocketmq.logging.InternalLogger;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
 
+import java.util.*;
+import java.util.concurrent.*;
+
 public class ConsumeMessageConcurrentlyService implements ConsumeMessageService {
     private static final InternalLogger log = ClientLogger.getLog();
     private final DefaultMQPushConsumerImpl defaultMQPushConsumerImpl;
@@ -61,7 +49,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
     private final String consumerGroup;
 
     static {
-        log.info("load custom ConsumeMessageConcurrentlyService class for eventMesh, because of updateOffset");
+        log.info("load custom ConsumeMessageConcurrentlyService class for proxy, because of updateOffset");
     }
 
     private final ScheduledExecutorService scheduledExecutorService;
@@ -87,7 +75,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
         this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryImpl("ConsumeMessageScheduledThread_"));
         this.cleanExpireMsgExecutors = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryImpl("CleanExpireMsgScheduledThread_"));
 
-        log.info("new ConsumeMessageConcurrentlyService instance for eventMesh has been created ");
+        log.info("new ConsumeMessageConcurrentlyService instance for proxy has been created ");
     }
 
     public void start() {
@@ -187,7 +175,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
         mq.setQueueId(msg.getQueueId());
 
         ProcessQueue pq = new ProcessQueue();
-        EventMeshConsumeConcurrentlyContext context = new EventMeshConsumeConcurrentlyContext(mq, pq);
+        ProxyConsumeConcurrentlyContext context = new ProxyConsumeConcurrentlyContext(mq, pq);
 
         this.resetRetryTopic(msgs);
 
@@ -290,7 +278,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
 
     public void processConsumeResult(
             final ConsumeConcurrentlyStatus status,
-            final EventMeshConsumeConcurrentlyContext context,
+            final ProxyConsumeConcurrentlyContext context,
             final ConsumeRequest consumeRequest
     ) {
         int ackIndex = context.getAckIndex();
@@ -354,7 +342,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
             log.debug("update offset, msg: {} {} {}", m.getTopic(), m.getQueueId(), m.getQueueOffset());
         }
         MessageQueue messageQueue = context.getMessageQueue();
-        ProcessQueue processQueue = ((EventMeshConsumeConcurrentlyContext) context).getProcessQueue();
+        ProcessQueue processQueue = ((ProxyConsumeConcurrentlyContext)context).getProcessQueue();
         long offset = processQueue.removeMessage(msgs);
         if (offset >= 0) {
             log.debug("update offset={}", offset);
@@ -453,7 +441,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
             }
 
             MessageListenerConcurrently listener = ConsumeMessageConcurrentlyService.this.messageListener;
-            EventMeshConsumeConcurrentlyContext context = new EventMeshConsumeConcurrentlyContext(messageQueue, processQueue);
+            ProxyConsumeConcurrentlyContext context = new ProxyConsumeConcurrentlyContext(messageQueue, processQueue);
             ConsumeConcurrentlyStatus status = null;
 
             ConsumeMessageContext consumeMessageContext = null;
@@ -476,8 +464,6 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
                     for (MessageExt msg : msgs) {
                         MessageAccessor.setConsumeStartTimeStamp(msg, String.valueOf(System.currentTimeMillis()));
                     }
-
-
                 }
                 status = listener.consumeMessage(Collections.unmodifiableList(msgs), context);
             } catch (Throwable e) {
