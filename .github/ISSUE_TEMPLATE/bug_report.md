@@ -4,29 +4,31 @@ about: If something isn't working as expected.
 labels: 'type: bug'
 ---
 
-## Describe the bug
+## Bug Report
+
+### Describe the bug
 <!--
 A clear and concise description of what the bug is.
 -->
 
-## Environment
+### Environment
 
 - OS: [e.g. Ubuntu 21.04 LTS]
 - EventMesh version(s): [e.g. 1.2.0]
 - RocketMQ version(s): [e.g. 4.7.1]
 - ...
 
-## Steps to reproduce
+### Steps to reproduce
 <!--
 Describe the steps to reproduce the bug here.
 -->
 
-## Expected behavior
+### Expected behavior
 <!--
 A clear and concise description of what you expected to happen.
 -->
 
-## Debug logs
+### Debug logs
 <!--
 Add your debug logs here.
 -->
