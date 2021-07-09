@@ -1,7 +1,7 @@
 ---
 name: 🚀 Feature Request
 about: I want to suggest a feature for this project (and may want to implement it 🙂)!
-labels: 'type: feature'
+labels: 'feature'
 ---
 
 ## Feature Request

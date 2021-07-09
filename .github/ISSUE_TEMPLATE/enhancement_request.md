@@ -1,7 +1,7 @@
 ---
-name: 🚀 Enhancement Request
+name: ✨ Enhancement Request
 about: I want to suggest an enhancement for this project (and may want to implement it 🙂)!
-labels: 'type: enhancement'
+labels: 'enhancement'
 ---
 
 ## Enhancement Request
