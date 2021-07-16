@@ -80,6 +80,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Build
+        run: ./gradlew generatePomFileForMavenJavaPublication
+
       - name: Check license header
         uses: apache/skywalking-eyes@9bd5feb86b5817aa6072b008f9866a2c3bbc8587
         env:

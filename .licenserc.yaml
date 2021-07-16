@@ -37,5 +37,12 @@ header:
     - 'LICENSE'
     - 'NOTICE'
     - 'DISCLAIMER-WIP'
+    # the following pom files should be generated before license check
+    - '**/publications/mavenJava/pom-default.xml'
 
   comment: on-failure
+
+  dependency:
+    files:
+      # the following pom files should be generated before license check
+      - '**/publications/mavenJava/pom-default.xml'
