@@ -42,7 +42,7 @@ header:
 
   comment: on-failure
 
-  dependency:
-    files:
-      # the following pom files should be generated before license check
-      - '**/publications/mavenJava/pom-default.xml'
+dependency:
+  files:
+    # the following pom files should be generated before license check
+    - '**/publications/mavenJava/pom-default.xml'
